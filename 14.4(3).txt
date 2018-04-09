@@ -1,0 +1,96 @@
+           .data  x00006000
+buff:      .space 4
+LookUp10:  .word  #0,#10,#20,#30,#40,#50,#60,#70,#80,#90
+LookUp100: .word  #0,#100,#200,#300,#400,#500,#600,#700,#800,#900
+SaveR1:    .space 4
+SaveR3:    .space 4
+SaveR4:    .space 4
+SaveR5:    .space 4
+           .text 
+           .global main
+;
+main:    sw   SaveR1(r0),r1
+         sw   SaveR3(r0),r3
+         sw   SaveR4(r0),r4
+         sw   SaveR5(r0),r5
+;
+         addi r2,r0,#0;r2计算和
+         addi r4,r0,buff;r4为指针
+         lb   r3,0(r4)
+         seqi r5,r3,#120;首位是否为x
+         beqz r5,decimal
+;
+         beqz r1,finish
+         add  r4,r4,r1
+;
+         lb   r3,0(r4)
+         slei r5,r3,#57;判断是否为数字
+         bnez r5,cal1
+         subi r3,r3,#7
+;
+cal1:    subi r3,r3,x30;转化为数字
+         add  r2,r2,r3;r2计算个位
+         subi r1,r1,#1
+         beqz r1,finish
+         subi r4,r4,#1
+;
+         lb   r3,0(r4)
+         slei r5,r3,#57
+         bnez r5,cal2
+         subi r3,r3,#7
+;
+cal2:    subi r3,r3,x30
+         slli r3,r3,#4
+         add  r2,r2,r3
+;
+         subi r1,r1,#1
+         beqz r1,finish
+         subi r4,r4,#1
+;
+         lb   r3,0(r4)
+         slei r5,r3,#57
+         bnez r5,cal3
+         subi r3,r3,#7
+;
+cal3:    subi r3,r3,x30
+         slli r3,r3,#8
+         add  r2,r2,r3
+         j    finish
+;         
+decimal: beqz r1,finish
+         add  r4,r4,r1
+         subi r4,r4,#1
+;
+         lb   r3,0(r4)
+         subi r3,r3,x30
+         add  r2,r2,r3
+;
+         subi r1,r1,#1
+         beqz r1,finish
+         subi r4,r4,#1
+;
+         lb   r3,0(r4)
+         subi r3,r3,x30
+         addi r5,r0,LookUp10
+         slli r3,r3,#2
+         add  r5,r5,r3
+         lw   r3,0(r5)
+         add  r2,r2,r3
+;
+         subi r1,r1,#1
+         beqz r1,finish
+         subi r4,r4,#1
+;
+         lb   r3,0(r4)
+         subi r3,r3,x30
+         addi r5,r0,LookUp100
+         slli r3,r3,#2
+         add  r5,r5,r3
+         lw   r3,0(r5)
+         add  r2,r2,r3
+;
+finish:  lw   r1,SaveR1(r0)
+         lw   r3,SaveR3(r0)
+         lw   r4,SaveR4(r0)
+         lw   r5,SaveR5(r0)
+         trap x00

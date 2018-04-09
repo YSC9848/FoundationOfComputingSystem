@@ -1,0 +1,11 @@
+            .DATA	X40000000
+            .TEXT   X30000000
+            .GLOBAL  MAIN
+MAIN :      ADD     R10, R0, R0
+            ADD     R11, R9, R0
+LOOP :      SLE     R1, R11, R8
+            BNEZ    R1, DONE
+            ADDI    R10, R10, #1
+            SUB     R11, R11, R8
+            J       LOOP
+DONE :      TRAP    X00

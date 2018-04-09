@@ -1,0 +1,23 @@
+            .DATA
+		;
+            .TEXT   
+            .GLOBAL  MAIN
+		;
+MAIN :      LHI     R1, x3000
+            ADDI    R3, R0, #97
+LOOP :      LB      R2, 0(R1)
+            SEQI    R5, R2, x04
+            BNEZ    R5, DONE
+            SLTI    R5, R2, #122
+            BEQZ    R5, AFTER
+            SLT     R5, R3, R2
+            BEQZ    R5, AFTER
+            JAL     TOUPPER
+AFTER :     ADDI    R1, R1, #1
+            J       LOOP
+		;
+DONE :      TRAP    x00
+		;
+TOUPPER :   SUBI    R2, R2, x20
+            SB      0(R1), R2
+            RET     

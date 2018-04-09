@@ -1,0 +1,11 @@
+            .DATA
+            .TEXT   
+            .GLOBAL  MAIN
+MAIN :      TRAP    X09
+            SUBI    R1, R4, X30
+            TRAP    X09
+            SUBI    R2, R4, X30
+            ADD     R4, R1, R2
+            ADDI    R4, R4, X30
+            TRAP    X07
+            TRAP    X00

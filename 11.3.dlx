@@ -1,0 +1,20 @@
+            .DATA	X30000000
+            .TEXT   X40000000
+            .GLOBAL  MAIN
+MAIN :      TRAP    X06
+            TRAP    X07
+            ADD     R5, R0, R0
+            LHI     R1, X3000
+AK :        LB      R2, 0(R1)
+            SEQI    R3, R2, X04
+            BNEZ    R3, DONE
+            SEQ     R3, R4, R2
+            BEQZ    R3, LOOP
+            ADDI    R5, R5, #1
+LOOP :      ADDI    R1, R1, #1
+            J       AK
+
+DONE :      SUBI    R4, R5, X0
+            TRAP    X07
+            TRAP    X00
+

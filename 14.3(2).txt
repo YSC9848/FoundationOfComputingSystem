@@ -1,0 +1,23 @@
+            .DATA
+            .TEXT   
+            .GLOBAL  MAIN
+MAIN :      TRAP    x09
+            ADDI    R2, R0, x41
+            SLE     R5, R2, R4
+            BEQZ    R5, CAL1
+            JAL     CHANGE
+CAL1 :      ADDI    R1, R4, #0
+            SUBI    R1, R1, x30
+            TRAP    x09
+            SLE     R5, R2, R4
+            BEQZ    R5, CAL
+            JAL     CHANGE
+CAL :       ADD     R4, R1, R4
+            SLEI    R5, R4, x39
+            BNEZ    R5, PRINT
+            ADDI    R4, R4, #7
+PRINT :     TRAP    x07
+            TRAP    x00
+		;
+CHANGE :    SUBI    R4, R4, #7
+            RET     

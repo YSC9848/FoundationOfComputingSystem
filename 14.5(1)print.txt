@@ -1,0 +1,45 @@
+            .DATA	x00006000
+BUFF :      .SPACE  4
+SAVER1 :    .SPACE  4
+SAVER2 :    .SPACE  4
+SAVER3 :    .SPACE  4
+SAVER4 :    .SPACE  4
+            .TEXT   
+            .GLOBAL  MAIN
+MAIN :      SW      SAVER1(R0), R1
+            SW      SAVER2(R0), R2
+            SW      SAVER3(R0), R3
+            SW      SAVER4(R0), R4
+		;
+            ADDI    R1, R0, x30
+LOOP100 :   SLTI    R3, R2, #100
+            BNEZ    R3, END100
+            ADDI    R1, R1, #1
+            SUBI    R2, R2, #100
+            J       LOOP100
+		;
+END100 :    SEQI    R3, R1, x30
+            BNEZ    R3, BEGIN10
+            ADD     R4, R1, R0
+            TRAP    x07
+		;
+BEGIN10 :   ADDI    R1, R0, x30
+LOOP10 :    SLTI    R3, R2, #10
+            BNEZ    R3, END10
+            ADDI    R1, R1, #1
+            SUBI    R2, R2, #10
+            J       LOOP10
+		;
+END10 :     SEQI    R3, R1, x30
+            BNEZ    R3, BEGIN1
+            ADD     R4, R1, R0
+            TRAP    x07
+		;
+BEGIN1 :    ADDI    R1, R2, x30
+            ADD     R4, R1, R0
+            TRAP    x07
+            LW      R1, SAVER1(R0)
+            LW      R2, SAVER2(R0)
+            LW      R3, SAVER3(R0)
+            LW      R4, SAVER4(R0)
+            TRAP    x00
